@@ -74,6 +74,14 @@ const IndexPage = () => {
             logo
             name
             url
+            community_members
+            parent {
+              ... on File {
+                name
+                relativePath
+                relativeDirectory
+              }
+            }
           }
         }
       }
