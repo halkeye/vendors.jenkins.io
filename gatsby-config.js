@@ -1,6 +1,16 @@
 module.exports = {
   siteMetadata: {
-    siteUrl: `https://www.yourdomain.tld`
+    siteUrl: `https://vendors.jenkins.io`
   },
-  plugins: ["gatsby-plugin-netlify-cms"]
+  plugins: [
+    "gatsby-plugin-netlify-cms",
+    {
+      resolve: "gatsby-source-filesystem",
+      options: {
+        name: "vendors",
+        path: "./src/vendors"
+      }
+    },
+    "gatsby-transformer-yaml"
+  ]
 };
