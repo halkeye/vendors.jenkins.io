@@ -1,9 +1,9 @@
 const {makeReactLayout, saveReactLayout} = require('./makeLayout');
-const YAML = require('yaml');
-const path = require('path');
+//const YAML = require('yaml');
+//const path = require('path');
 
 exports.onPreBootstrap = async () => {
-  await makeReactLayout('https://vendors.jenkins.io').then(saveReactLayout);
+    await makeReactLayout('https://vendors.jenkins.io').then(saveReactLayout);
 };
 
 /*

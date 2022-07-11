@@ -1,0 +1,10 @@
+---
+- label: 'Certifications'
+  key: 'certifications'
+- label: 'Custom Builds'
+  key: 'custom_builds'
+- label: 'Support'
+  key: 'support'
+- label: 'Training'
+  key: 'training'
+

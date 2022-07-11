@@ -1,62 +1,45 @@
-import * as React from "react"
-import {graphql, useStaticQuery} from "gatsby";
-import Layout from '../layout.jsx';
-import 'react-bootstrap-drawer/lib/style.css';
-import {Drawer, } from 'react-bootstrap-drawer';
-import {by639_1} from 'iso-language-codes'
-import {
-  Col,
-  Collapse,
-  Row,
-  Form,
-  ListGroup
-} from 'react-bootstrap';
+import * as React from 'react';
+import {graphql, useStaticQuery} from 'gatsby';
+import Layout from '../layout';
+import {SearchBox} from '../components/SearchBox';
+import {ListGroup} from 'react-bootstrap';
+import {fuzzy} from 'fast-fuzzy';
+import {by639_1} from 'iso-language-codes';
 
-
-// alternative - https://stackoverflow.com/questions/60482018/make-a-sidebar-from-react-bootstrap
-// https://bootstrapious.com/p/bootstrap-sidebar
-const ApplicationDrawer = ({languages, ...props}) => {
-  const [open, setOpen] = React.useState(false);
-
-  const handleToggle = () => setOpen(!open);
-
-  const selectLanguage = (e) => {
-    console.log('selectLanguage', e.target.dataset.lang)
-  }
-
-  const selectFeature = (e) => {
-    console.log('selectFeature', e.target.dataset.lang)
-  }
-
-  return (
-    <Drawer {...props}>
-      <Drawer.Toggle onClick={handleToggle} />
-
-      <Collapse in={open}>
-        <Drawer.Overflow>
-          <Drawer.ToC>
-            <Drawer.Nav>
-              <Drawer.Item><Form.Control type="text" label={"Name"} onChange={selectFeature} placeholder="Vendor Name" /></Drawer.Item>
-              <Drawer.Header>Languages</Drawer.Header>
-              {languages.map(lang => <Drawer.Item key={lang}><Form.Check type="checkbox" id={`checkbox-lang-${lang}`} label={by639_1[lang]?.name || lang} onChange={selectLanguage} data-lang={lang} /></Drawer.Item>)}
-              <Drawer.Header>Features</Drawer.Header>
-              <Drawer.Item><Form.Check type="checkbox" label={"Certifications"} onChange={selectFeature} data-feature="certifications" /></Drawer.Item>
-              <Drawer.Item><Form.Check type="checkbox" label={"Custom Builds"} onChange={selectFeature} data-feature="custom_builds" /></Drawer.Item>
-              <Drawer.Item><Form.Check type="checkbox" label={"Support"} onChange={selectFeature} data-feature="support" /></Drawer.Item>
-              <Drawer.Item><Form.Check type="checkbox" label={"Training"} onChange={selectFeature} data-feature="training" /></Drawer.Item>
-            </Drawer.Nav>
-          </Drawer.ToC>
-        </Drawer.Overflow>
-      </Collapse>
-    </Drawer>
-  );
-};
+const filterVendors = (filters, vendors) => {
+  return vendors.filter(({node: vendor}) => {
+    if (filters.name) {
+      if (fuzzy(filters.name, vendor.name) < 0.5) {
+        return false;
+      }
+    }
+    if (Object.keys(filters.languages).length > 0) {
+      if (!Object.keys(filters.languages).every(lang => vendor.languages.includes(lang))) {
+        return false;
+      }
+    }
+    if (Object.keys(filters.features).length > 0) {
+      if (!Object.keys(filters.features).every(feature => vendor.features[feature])) {
+        return false;
+      }
+    }
+    return true;
+  })
+}
 
 const IndexPage = () => {
-  const {allVendorsYaml: {languages, vendors}} = useStaticQuery(graphql`
+  const {allVendorsYaml: {ALL_LANGUAGES, vendors}, allFeaturesYaml} = useStaticQuery(graphql`
     query {
+      allFeaturesYaml {
+        ALL_FEATURES: edges {
+          node {
+            key
+            label
+          }
+        }
+      },
       allVendorsYaml {
-        languages: distinct(field: languages)
+        ALL_LANGUAGES: distinct(field: languages)
         vendors: edges {
           node {
             features {
@@ -87,30 +70,63 @@ const IndexPage = () => {
       }
     }
   `);
+  const ALL_FEATURES = allFeaturesYaml.ALL_FEATURES.map(({node}) => node);
+  const [filters, setFilters] = React.useState({
+    name: '',
+    features: {},
+    languages: {},
+  });
+
+  console.log('filters', filters);
+
+  const filteredVendors = filterVendors(filters, vendors);
+
   return (
     <Layout>
-      <Row className="flex-xl-nowrap">
-        <Col as={ApplicationDrawer} languages={languages} xs={12} md={3} lg={2} />
-        <Col xs={12} md={9} lg={10}>
+      <div className="container">
+        <div className="row body">
+          <SearchBox ALL_LANGUAGES={ALL_LANGUAGES} ALL_FEATURES={ALL_FEATURES} setFilters={setFilters} filters={filters} />
           <div className="row">
             <div className="col">
-              <ListGroup>
-                {vendors.map(({node: vendor}) => {
+              <h4 className="display-4">Results</h4>
+              {filteredVendors.length === 0 && <strong>No results</strong>}
+              {filteredVendors.length > 0 && (<ListGroup>
+                {filteredVendors.map(({node: vendor}) => {
                   return (
-                    <ListGroup.Item key={vendor.id}>
-                      <img src={vendor.logo} />
-                      {vendor.name}
-                      <br /><textarea style={{width: '100%', height: '100%'}}>{JSON.stringify(vendor, null, 4)}</textarea>
-                    </ListGroup.Item>
+                    <div key={vendor.id} className="border border-dark rounded mb-3">
+                      <div className="row">
+                        <div className="col-md-1 d-none d-md-block">
+                          <img src={vendor.logo} alt={`${vendor.name} Logo`} className="img-fluid" />
+                        </div>
+                        <div className="col">
+                          <h3 className="display-3">{vendor.name}</h3>
+                          <h5>Features:</h5>
+                          {ALL_FEATURES.filter(feature => vendor.features[feature.key]).map(feature => (
+                            <div key={feature.key} style={{
+                              display: 'inline-block',
+                              color: vendor.features[feature.key] ? 'green' : '',
+                              width: '150px'
+                            }}>
+                              {vendor.features[feature.key] && <ion-icon name="checkmark-circle"></ion-icon>}
+                              {' '}
+                              {feature.label}
+                            </div>
+                          ))}
+                          <h5>Langauges:</h5>
+                          {vendor.languages.map(lang => (<div key={lang} style={{display: 'inline-block', width: '150px'}}>{by639_1[lang].name}</div>))}
+                        </div>
+                      </div>
+                    </div>
                   );
                 })}
-              </ListGroup>
+              </ListGroup>)
+              }
             </div>
           </div>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </Layout>
-  )
-}
+  );
+};
 
-export default IndexPage
+export default IndexPage;
