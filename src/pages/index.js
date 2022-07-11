@@ -100,20 +100,22 @@ const IndexPage = () => {
                         </div>
                         <div className="col">
                           <h3 className="display-3">{vendor.name}</h3>
-                          <h5>Features:</h5>
-                          {ALL_FEATURES.filter(feature => vendor.features[feature.key]).map(feature => (
-                            <div key={feature.key} style={{
-                              display: 'inline-block',
-                              color: vendor.features[feature.key] ? 'green' : '',
-                              width: '150px'
-                            }}>
-                              {vendor.features[feature.key] && <ion-icon name="checkmark-circle"></ion-icon>}
-                              {' '}
-                              {feature.label}
-                            </div>
-                          ))}
-                          <h5>Langauges:</h5>
-                          {vendor.languages.map(lang => (<div key={lang} style={{display: 'inline-block', width: '150px'}}>{by639_1[lang].name}</div>))}
+                          <div>
+                            <strong>Features: </strong>
+                            <ul class="list-inline d-inline-block">
+                              {ALL_FEATURES.filter(feature => vendor.features[feature.key]).map(feature => (
+                                <li class="list-inline-item" key={feature.key} style={{
+                                  display: 'inline-block',
+                                  color: vendor.features[feature.key] ? 'green' : '',
+                                }}>
+                                  {vendor.features[feature.key] && <ion-icon name="checkmark-circle"></ion-icon>}
+                                  {' '}
+                                  {feature.label}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <p><strong>Languages:</strong> {vendor.languages.map(lang => by639_1[lang]?.name || lang).join(', ')}</p>
                         </div>
                       </div>
                     </div>
