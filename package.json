@@ -17,16 +17,16 @@
   "dependencies": {
     "@halkeye/jenkins-io-react": "^0.0.2",
     "fast-fuzzy": "^1.11.2",
-    "gatsby": "^4.17.2",
+    "gatsby": "^4.18.2",
     "gatsby-plugin-image": "^2.18.1",
     "gatsby-plugin-sharp": "^4.18.1",
     "gatsby-source-filesystem": "^4.18.1",
     "gatsby-transformer-sharp": "^4.18.1",
     "gatsby-transformer-yaml": "^4.18.0",
     "iso-language-codes": "^1.1.0",
-    "react": "^18.1.0",
+    "react": "^18.2.0",
     "react-bootstrap": "^2.4.0",
-    "react-dom": "^18.1.0",
+    "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0"
   },
   "devDependencies": {
