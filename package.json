@@ -15,7 +15,7 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
-    "cheerio": "^1.0.0-rc.12",
+    "@halkeye/jenkins-io-react": "^0.0.2",
     "fast-fuzzy": "^1.11.2",
     "gatsby": "^4.17.2",
     "gatsby-plugin-netlify-cms": "^6.17.0",

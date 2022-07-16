@@ -82,7 +82,7 @@ const IndexPage = () => {
   const filteredVendors = filterVendors(filters, vendors);
 
   return (
-    <Layout>
+    <Layout sourcePath="src/pages/index.js">
       <div className="container">
         <div className="row body">
           <SearchBox ALL_LANGUAGES={ALL_LANGUAGES} ALL_FEATURES={ALL_FEATURES} setFilters={setFilters} filters={filters} />
@@ -102,9 +102,9 @@ const IndexPage = () => {
                           <h3 className="display-3">{vendor.name}</h3>
                           <div>
                             <strong>Features: </strong>
-                            <ul class="list-inline d-inline-block">
+                            <ul className="list-inline d-inline-block">
                               {ALL_FEATURES.filter(feature => vendor.features[feature.key]).map(feature => (
-                                <li class="list-inline-item" key={feature.key} style={{
+                                <li className="list-inline-item" key={feature.key} style={{
                                   display: 'inline-block',
                                   color: vendor.features[feature.key] ? 'green' : '',
                                 }}>

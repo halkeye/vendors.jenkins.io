@@ -1,4 +1,4 @@
-const {makeReactLayout, saveReactLayout} = require('./makeLayout');
+const {makeReactLayout, saveReactLayout} = require('@halkeye/jenkins-io-react/makeLayout');
 //const YAML = require('yaml');
 //const path = require('path');
 

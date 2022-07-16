@@ -1,6 +1,7 @@
 module.exports = {
     siteMetadata: {
-        siteUrl: 'https://vendors.jenkins.io'
+        siteUrl: 'https://vendors.jenkins.io',
+        githubRepo: 'halkeye/vendors.jenkins.io'
     },
     plugins: [
         'gatsby-plugin-netlify-cms',
