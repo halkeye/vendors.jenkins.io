@@ -82,8 +82,6 @@ const IndexPage = () => {
         languages: {},
     });
 
-    console.log('filters', filters);
-
     const filteredVendors = filterVendors(filters, vendors);
 
     return (
