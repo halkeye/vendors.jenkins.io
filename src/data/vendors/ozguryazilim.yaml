@@ -3,7 +3,7 @@ name: Özgür Yazılım
 # Landing page for support?
 url: https://www.ozguryazilim.com.tr/en/
 # Later we'll embed logos into the site so we don't ever get 404s
-logo: https://www.ozguryazilim.com.tr/wp-content/themes/ozguryazilimv4/dist/assets/img/ozguryazilim_logo.png
+logo: ./ozguryazilim.png
 # for timezone listing
 # I don't know how to record this yet
 locations:

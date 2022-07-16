@@ -4,7 +4,8 @@ module.exports = {
         githubRepo: 'halkeye/vendors.jenkins.io'
     },
     plugins: [
-        'gatsby-plugin-netlify-cms',
+        'gatsby-plugin-image',
+        'gatsby-plugin-sharp',
         {
             resolve: 'gatsby-source-filesystem',
             options: {
@@ -19,6 +20,7 @@ module.exports = {
                 path: './src/data/features'
             }
         },
-        'gatsby-transformer-yaml'
+        'gatsby-transformer-yaml',
+        'gatsby-transformer-sharp',
     ]
 };

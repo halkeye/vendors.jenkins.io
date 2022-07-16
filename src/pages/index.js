@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {graphql, useStaticQuery} from 'gatsby';
+import {GatsbyImage, getImage} from "gatsby-plugin-image"
 import Layout from '../layout';
 import {SearchBox} from '../components/SearchBox';
 import {ListGroup} from 'react-bootstrap';
@@ -54,7 +55,11 @@ const IndexPage = () => {
               name
               timezone
             }
-            logo
+            logo {
+              childImageSharp {
+                gatsbyImageData(width: 200)
+              }
+            }
             name
             url
             community_members
@@ -95,10 +100,10 @@ const IndexPage = () => {
                   return (
                     <div key={vendor.id} className="border border-dark rounded mb-3">
                       <div className="row">
-                        <div className="col-md-1 d-none d-md-block">
-                          <img src={vendor.logo} alt={`${vendor.name} Logo`} className="img-fluid" />
+                        <div className="col-md-3 d-none d-md-block mx-auto">
+                          <GatsbyImage image={getImage(vendor.logo)} alt={`${vendor.name} Logo`} />
                         </div>
-                        <div className="col">
+                        <div className="col-md-9">
                           <h3 className="display-3">{vendor.name}</h3>
                           <div>
                             <strong>Features: </strong>
