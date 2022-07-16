@@ -1,10 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {by639_1} from 'iso-language-codes';
-import {Row, Col, Form} from 'react-bootstrap';
+import {Row, Col, Form, Collapse, Button} from 'react-bootstrap';
 import * as styles from './SearchBox.module.css';
 
 export const SearchBox = ({ALL_FEATURES, ALL_LANGUAGES, setFilters, filters}) => {
+    const [showAdvancedSearch, setShowAdvancedSearch] = React.useState(false);
+
     const onChangeFeature = (e) => {
         const feature = e.target.dataset.feature;
         const features = {...filters.features};
@@ -29,36 +31,56 @@ export const SearchBox = ({ALL_FEATURES, ALL_LANGUAGES, setFilters, filters}) =>
         setFilters({...filters, name: e.target.value});
     };
     return (
-        <div className={`jumpbotron ${styles.root}`}>
+        <div className={`jumpbotron rounded mx-auto ${styles.root}`}>
             <Row>
-                <Col><Form.Control type="text" label={'Name'} onChange={onChangeVendorName} placeholder="Vendor Name" /></Col>
-            </Row>
-            <Row className="flex-xl-nowrap">
-                <Col xs={12} md={6}>
-                    {ALL_LANGUAGES.map(lang => (<Form.Check
-                        key={lang}
-                        type="checkbox"
-                        id={`checkbox-lang-${lang}`}
-                        label={by639_1[lang]?.name || lang}
-                        onChange={onChangeLanguage}
-                        value={filters.languages[lang]}
-                        data-lang={lang}
-                    />))}
+                <Col>
+                    <Form.Control type="text" label={'Name'} onChange={onChangeVendorName} placeholder="Vendor Name" />
                 </Col>
-                <Col xs={12} md={6}>
-                    {ALL_FEATURES.map(feature => (
-                        <Form.Check
-                            key={feature.key}
+            </Row>
+            <Collapse in={!showAdvancedSearch}>
+                <Row className="pt-2 text-right">
+                    <Col>
+                        <Button
+                            onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
+                            aria-controls="toggle-advanced-search-tex"
+                            aria-expanded={showAdvancedSearch}
+                            className="mx-auto"
+                        >
+                            <ion-icon name="chevron-down-circle-outline" />
+                            {' '}
+                            Advanced
+                        </Button>
+                    </Col>
+                </Row>
+            </Collapse>
+            <Collapse in={showAdvancedSearch}>
+                <Row className="flex-xl-nowrap">
+                    <Col xs={12} md={6}>
+                        {ALL_LANGUAGES.map(lang => (<Form.Check
+                            key={lang}
                             type="checkbox"
-                            id={`checkbox-feature-${feature.key}`}
-                            label={feature.label}
-                            onChange={onChangeFeature}
-                            data-feature={feature.key}
-                            value={filters.features[feature.key]}
-                        />
-                    ))}
-                </Col>
-            </Row>
+                            id={`checkbox-lang-${lang}`}
+                            label={by639_1[lang]?.name || lang}
+                            onChange={onChangeLanguage}
+                            value={filters.languages[lang]}
+                            data-lang={lang}
+                        />))}
+                    </Col>
+                    <Col xs={12} md={6}>
+                        {ALL_FEATURES.map(feature => (
+                            <Form.Check
+                                key={feature.key}
+                                type="checkbox"
+                                id={`checkbox-feature-${feature.key}`}
+                                label={feature.label}
+                                onChange={onChangeFeature}
+                                data-feature={feature.key}
+                                value={filters.features[feature.key]}
+                            />
+                        ))}
+                    </Col>
+                </Row>
+            </Collapse>
         </div>
     );
 };
