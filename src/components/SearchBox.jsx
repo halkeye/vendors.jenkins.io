@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {by639_1} from 'iso-language-codes';
 import {Row, Col, Form, Collapse, Button} from 'react-bootstrap';
+import LocalPropTypes from '../proptypes';
 import * as styles from './SearchBox.module.css';
 
 export const SearchBox = ({ALL_FEATURES, ALL_LANGUAGES, setFilters, filters}) => {
@@ -87,10 +88,7 @@ export const SearchBox = ({ALL_FEATURES, ALL_LANGUAGES, setFilters, filters}) =>
 
 SearchBox.propTypes = {
     ALL_LANGUAGES: PropTypes.arrayOf(PropTypes.string).isRequired,
-    ALL_FEATURES: PropTypes.arrayOf(PropTypes.shape({
-        key: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired
-    }).isRequired).isRequired,
+    ALL_FEATURES: LocalPropTypes.ALL_FEATURES.isRequired,
     setFilters: PropTypes.func.isRequired,
     filters: PropTypes.shape({
         name: PropTypes.string,

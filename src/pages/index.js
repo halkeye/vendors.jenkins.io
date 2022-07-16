@@ -1,11 +1,10 @@
 import * as React from 'react';
 import {graphql, useStaticQuery} from 'gatsby';
-import {GatsbyImage, getImage} from 'gatsby-plugin-image';
 import Layout from '../layout';
 import {SearchBox} from '../components/SearchBox';
+import {VendorBox} from '../components/VendorBox';
 import {ListGroup} from 'react-bootstrap';
 import {fuzzy} from 'fast-fuzzy';
-import {by639_1} from 'iso-language-codes';
 
 const filterVendors = (filters, vendors) => {
     return vendors.filter(({node: vendor}) => {
@@ -94,42 +93,10 @@ const IndexPage = () => {
                             <h4 className="display-4">Results</h4>
                             {filteredVendors.length === 0 && <strong>No results</strong>}
                             {filteredVendors.length > 0 && (<ListGroup>
-                                {filteredVendors.map(({node: vendor}) => {
-                                    return (
-                                        <div key={vendor.id} className="border border-dark rounded mb-3">
-                                            <div className="row">
-                                                <div className="col-md-3 d-none d-md-block mx-auto">
-                                                    <GatsbyImage image={getImage(vendor.logo)} alt={`${vendor.name} Logo`} />
-                                                </div>
-                                                <div className="col-md-9">
-                                                    <h3 className="display-3">{vendor.name}</h3>
-                                                    <div>
-                                                        <strong>Features: </strong>
-                                                        <ul className="list-inline d-inline-block">
-                                                            {ALL_FEATURES.filter(feature => vendor.features[feature.key]).map(feature => (
-                                                                <li className="list-inline-item" key={feature.key} style={{
-                                                                    display: 'inline-block',
-                                                                    color: vendor.features[feature.key] ? 'green' : '',
-                                                                }}>
-                                                                    {vendor.features[feature.key] && <ion-icon name="checkmark-circle" />}
-                                                                    {' '}
-                                                                    {feature.label}
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                    <p>
-                                                        <strong>Languages:</strong>
-                                                        {' '}
-                                                        {vendor.languages.map(lang => by639_1[lang]?.name || lang).join(', ')}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </ListGroup>)
-                            }
+                                {filteredVendors.map(({node: vendor}) => (
+                                    <VendorBox key={vendor.id} vendor={vendor} ALL_FEATURES={ALL_FEATURES} />
+                                ))}
+                            </ListGroup>)}
                         </div>
                     </div>
                 </div>
