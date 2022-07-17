@@ -54,6 +54,9 @@ const IndexPage = () => {
               name
               timezone
             }
+            fields {
+              slug
+            }
             logo {
               childImageSharp {
                 gatsbyImageData(width: 200)

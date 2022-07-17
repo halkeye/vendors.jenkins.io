@@ -1,9 +1,23 @@
 const {makeReactLayout, saveReactLayout} = require('@halkeye/jenkins-io-react/makeLayout');
+const path = require('path');
 //const YAML = require('yaml');
-//const path = require('path');
 
 exports.onPreBootstrap = async () => {
     await makeReactLayout('https://vendors.jenkins.io').then(saveReactLayout);
+};
+
+exports.onCreateNode = ({node, getNode, actions}) => {
+    const {createNodeField} = actions;
+    const fileNode = getNode(node.parent);
+    if ((node.internal.type === 'VendorsYaml') && fileNode.internal.type === 'File') {
+        const parsedFilePath = path.parse(fileNode.relativePath);
+
+        createNodeField({
+            name: 'slug',
+            node,
+            value: parsedFilePath.name,
+        });
+    }
 };
 
 /*

@@ -1,11 +1,16 @@
 import * as React from 'react';
 import {GatsbyImage, getImage} from 'gatsby-plugin-image';
-import LocalPropTypes from '../proptypes';
+import {LocalPropTypes} from '../proptypes';
 import {by639_1} from 'iso-language-codes';
 
 export const VendorBox = ({vendor, ALL_FEATURES}) => {
     return (
-        <div key={vendor.id} className="border border-dark rounded mb-3">
+        <div key={vendor.id} className="border border-dark rounded mb-3" id={`vendor_${vendor.fields.slug}`}>
+            <div className="pull-right">
+                <a href={`#vendor_${vendor.fields.slug}`} className="close" aria-label="Permant Link">
+                    <ion-icon name="link-outline" />
+                </a>
+            </div>
             <div className="row">
                 <div className="col-md-3 d-none d-md-block mx-auto">
                     <GatsbyImage image={getImage(vendor.logo)} alt={`${vendor.name} Logo`} />
