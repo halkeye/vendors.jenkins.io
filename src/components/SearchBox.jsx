@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {by639_1} from 'iso-language-codes';
+import ISO6391 from 'iso-639-1';
 import {Row, Col, Form, Collapse, Button} from 'react-bootstrap';
-import LocalPropTypes from '../proptypes';
+import {LocalPropTypes} from '../proptypes';
 import * as styles from './SearchBox.module.css';
 
 export const SearchBox = ({ALL_FEATURES, ALL_LANGUAGES, setFilters, filters}) => {
@@ -57,17 +57,19 @@ export const SearchBox = ({ALL_FEATURES, ALL_LANGUAGES, setFilters, filters}) =>
             <Collapse in={showAdvancedSearch}>
                 <Row className="flex-xl-nowrap">
                     <Col xs={12} md={6}>
+                        <h3>Language</h3>
                         {ALL_LANGUAGES.map(lang => (<Form.Check
                             key={lang}
                             type="checkbox"
                             id={`checkbox-lang-${lang}`}
-                            label={by639_1[lang]?.name || lang}
+                            label={ISO6391.getName(lang)|| lang}
                             onChange={onChangeLanguage}
                             value={filters.languages[lang]}
                             data-lang={lang}
                         />))}
                     </Col>
                     <Col xs={12} md={6}>
+                        <h3>Features</h3>
                         {ALL_FEATURES.map(feature => (
                             <Form.Check
                                 key={feature.key}

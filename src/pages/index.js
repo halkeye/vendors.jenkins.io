@@ -35,6 +35,7 @@ const IndexPage = () => {
           node {
             key
             label
+            description
           }
         }
       },
@@ -61,6 +62,7 @@ const IndexPage = () => {
               childImageSharp {
                 gatsbyImageData(width: 200)
               }
+              publicURL
             }
             name
             url

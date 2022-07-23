@@ -3,8 +3,10 @@
   key: 'certifications'
 - label: 'Custom Builds'
   key: 'custom_builds'
+  description: Provides a version of jenkins specific to this vendor
 - label: 'Support'
   key: 'support'
 - label: 'Training'
   key: 'training'
+  description: Provides some sort of training
 

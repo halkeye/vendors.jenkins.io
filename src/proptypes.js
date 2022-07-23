@@ -14,6 +14,11 @@ export const LocalPropTypes = {
             slug: PropTypes.string.isRequired
         }).isRequired,
         languages: PropTypes.arrayOf(PropTypes.string).isRequired,
+    }),
+    feature: PropTypes.shape({
+        key: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired,
+        description: PropTypes.string
     })
 };
 export default LocalPropTypes;
