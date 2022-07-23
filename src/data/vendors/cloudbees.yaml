@@ -1,0 +1,54 @@
+---
+name: CloudBees
+# Landing page for support?
+url: https://support.cloudbees.com
+logo: ./cloudbees.svg
+# for timezone listing
+# I don't know how to record this yet
+locations:
+  - name: New York
+    timezone: -0400
+  - name: San Francisco
+    timezone: -0700
+  - name: London
+    timezone: +0100
+  - name: Paris
+    timezone: +0100
+  - name: Sydney
+    timezone: +1000
+  - name: New Delhi
+    timezone: +0530
+languages:
+  - de
+  - en
+  - es
+  - fr
+features:
+  support: true
+  custom_builds: false
+  training: true
+  certifications: true
+# should be ldap usernames so we can look up plugins as needed
+community_members:
+  - abayer
+  - alecharp
+  - amuniz
+  - aneveux
+  - basil
+  - batmat
+  - carroll
+  - danielbeck
+  - dduportal
+  - jglick
+  - kerogers
+  - kmartens27
+  - markewaite
+  - mikecirioli
+  - olamy
+  - rarabaolaza
+  - richbg
+  - rsandell
+  - teilo
+  - twasyl
+  - vlatombe
+  - wfollonier
