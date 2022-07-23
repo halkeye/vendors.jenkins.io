@@ -5,9 +5,27 @@ import {Row, Col, Form, Collapse, Button} from 'react-bootstrap';
 import {LocalPropTypes} from '../proptypes';
 import * as styles from './SearchBox.module.css';
 import {Feature} from './Feature';
+import {graphql, useStaticQuery} from 'gatsby';
 
-export const SearchBox = ({ALL_FEATURES, ALL_LANGUAGES, setFilters, filters}) => {
+export const SearchBox = ({setFilters, filters}) => {
     const [showAdvancedSearch, setShowAdvancedSearch] = React.useState(false);
+    const {allVendorsYaml: {ALL_LANGUAGES}, allFeaturesYaml} = useStaticQuery(graphql`
+    query {
+      allFeaturesYaml {
+        ALL_FEATURES: edges {
+          node {
+            key
+            label
+            description
+          }
+        }
+      },
+      allVendorsYaml {
+        ALL_LANGUAGES: distinct(field: languages)
+      }
+    }
+  `);
+    const ALL_FEATURES = allFeaturesYaml.ALL_FEATURES.map(({node}) => node);
 
     const onChangeFeature = (e) => {
         const feature = e.target.dataset.feature;

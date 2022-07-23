@@ -19,6 +19,7 @@
     "fast-fuzzy": "^1.11.2",
     "gatsby": "^4.18.2",
     "gatsby-plugin-image": "^2.18.1",
+    "gatsby-plugin-schema-snapshot": "^3.19.0",
     "gatsby-plugin-sharp": "^4.18.1",
     "gatsby-source-filesystem": "^4.18.1",
     "gatsby-transformer-sharp": "^4.18.1",

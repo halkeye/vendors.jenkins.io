@@ -1,10 +1,26 @@
 import * as React from 'react';
 import {GatsbyImage, getImage} from 'gatsby-plugin-image';
+import {graphql, useStaticQuery} from 'gatsby';
 import {LocalPropTypes} from '../proptypes';
 import ISO6391 from 'iso-639-1';
 import {Feature} from './Feature';
 
-export const VendorBox = ({vendor, ALL_FEATURES}) => {
+export const VendorBox = ({vendor}) => {
+    const {allFeaturesYaml} = useStaticQuery(graphql`
+    query {
+      allFeaturesYaml {
+        ALL_FEATURES: edges {
+          node {
+            key
+            label
+            description
+          }
+        }
+      },
+    }
+  `);
+    const ALL_FEATURES = allFeaturesYaml.ALL_FEATURES.map(({node}) => node);
+    const vendorFeatures = vendor.features.map(f => f.key);
     return (
         <div key={vendor.id} id={`vendor_${vendor.fields.slug}`}>
             <div className="pull-right">
@@ -24,7 +40,7 @@ export const VendorBox = ({vendor, ALL_FEATURES}) => {
                     <div>
                         <strong>Features: </strong>
                         <ul className="list-inline d-inline-block">
-                            {ALL_FEATURES.map(feature => (<Feature feature={feature} key={feature.key} checked={vendor.features[feature.key]} />))}
+                            {ALL_FEATURES.map(feature => (<Feature feature={feature} key={feature.key} checked={vendorFeatures.includes(feature.key)} />))}
                         </ul>
                     </div>
                     <p>
@@ -39,7 +55,6 @@ export const VendorBox = ({vendor, ALL_FEATURES}) => {
 };
 
 VendorBox.propTypes = {
-    ALL_FEATURES: LocalPropTypes.ALL_FEATURES.isRequired,
     vendor: LocalPropTypes.vendor.isRequired,
 };
 VendorBox.displayNAme = 'VendorBox';

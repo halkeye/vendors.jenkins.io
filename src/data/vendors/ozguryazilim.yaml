@@ -14,10 +14,8 @@ locations:
 languages:
   - en
 features:
-  support: true
-  custom_builds: false
-  training: true
-  certifications: false
+  - support
+  - training
 # should be ldap usernames so we can look up plugins as needed
 community_members:
   - kmartens27

@@ -28,26 +28,15 @@ const filterVendors = (filters, vendors) => {
 };
 
 const IndexPage = () => {
-    const {allVendorsYaml: {ALL_LANGUAGES, vendors}, allFeaturesYaml} = useStaticQuery(graphql`
+    const {allVendorsYaml: {vendors}} = useStaticQuery(graphql`
     query {
-      allFeaturesYaml {
-        ALL_FEATURES: edges {
-          node {
-            key
-            label
-            description
-          }
-        }
-      },
       allVendorsYaml {
-        ALL_LANGUAGES: distinct(field: languages)
         vendors: edges {
           node {
             features {
-              certifications
-              custom_builds
-              support
-              training
+              key
+              label
+              description
             }
             id
             languages
@@ -79,7 +68,6 @@ const IndexPage = () => {
       }
     }
   `);
-    const ALL_FEATURES = allFeaturesYaml.ALL_FEATURES.map(({node}) => node);
     const [filters, setFilters] = React.useState({
         name: '',
         features: {},
@@ -92,7 +80,7 @@ const IndexPage = () => {
         <Layout sourcePath="src/pages/index.js">
             <div className="container">
                 <div className="row body">
-                    <SearchBox ALL_LANGUAGES={ALL_LANGUAGES} ALL_FEATURES={ALL_FEATURES} setFilters={setFilters} filters={filters} />
+                    <SearchBox setFilters={setFilters} filters={filters} />
                     <div className="row">
                         <div className="col">
                             <h4 className="display-4">Results</h4>
@@ -100,7 +88,7 @@ const IndexPage = () => {
                             {filteredVendors.length > 0 && (
                                 <ListGroup>
                                     {filteredVendors.map(({node: vendor}) => (
-                                        <ListGroup.Item key={vendor.id}><VendorBox vendor={vendor} ALL_FEATURES={ALL_FEATURES} /></ListGroup.Item>
+                                        <ListGroup.Item key={vendor.id}><VendorBox vendor={vendor} /></ListGroup.Item>
                                     ))}
                                 </ListGroup>
                             )}

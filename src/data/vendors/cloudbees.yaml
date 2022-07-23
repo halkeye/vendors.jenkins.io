@@ -24,10 +24,9 @@ languages:
   - es
   - fr
 features:
-  support: true
-  custom_builds: false
-  training: true
-  certifications: true
+  - support
+  - training
+  - certifications
 # should be ldap usernames so we can look up plugins as needed
 community_members:
   - abayer
