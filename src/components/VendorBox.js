@@ -1,45 +1,12 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {GatsbyImage, getImage} from 'gatsby-plugin-image';
 import {LocalPropTypes} from '../proptypes';
 import ISO6391 from 'iso-639-1';
-
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
-
-const FeatureDescriptionOverlay = ({feature, children, ...props}) => {
-    if (feature.description) {
-        const overlay = (props) => <Tooltip id={`tooltop-${feature.key}`} {...props}>{feature.description}</Tooltip>;
-        return (<OverlayTrigger placement="right" overlay={overlay} {...props}>{children}</OverlayTrigger>);
-    }
-    return <>{children}</>;
-};
-FeatureDescriptionOverlay.displayName = 'FeatureDescriptionOverlay';
-FeatureDescriptionOverlay.propTypes = {
-    feature: LocalPropTypes.feature.isRequired,
-    children: PropTypes.node
-};
-
-export const VendorBoxFeature = ({feature}) => (
-    <li className="list-inline-item" key={feature.key} style={{display: 'inline-block', color: 'green'}}>
-        <FeatureDescriptionOverlay feature={feature}>
-            <span>
-                <ion-icon name="checkmark-circle" />
-                {' '}
-                {feature.label}
-            </span>
-        </FeatureDescriptionOverlay>
-    </li>
-);
-VendorBoxFeature.propTypes = {
-    feature: LocalPropTypes.feature.isRequired
-};
-VendorBoxFeature.displayName = 'VendorBoxFeature';
-
+import {Feature} from './Feature';
 
 export const VendorBox = ({vendor, ALL_FEATURES}) => {
     return (
-        <div key={vendor.id} className="border border-dark rounded mb-3" id={`vendor_${vendor.fields.slug}`}>
+        <div key={vendor.id} id={`vendor_${vendor.fields.slug}`}>
             <div className="pull-right">
                 <a href={`#vendor_${vendor.fields.slug}`} className="close" aria-label="Permant Link">
                     <ion-icon name="link-outline" />
@@ -57,9 +24,7 @@ export const VendorBox = ({vendor, ALL_FEATURES}) => {
                     <div>
                         <strong>Features: </strong>
                         <ul className="list-inline d-inline-block">
-                            {ALL_FEATURES.filter(feature => vendor.features[feature.key]).map(feature => (
-                                <VendorBoxFeature feature={feature} key={feature.key} />
-                            ))}
+                            {ALL_FEATURES.map(feature => (<Feature feature={feature} key={feature.key} checked={vendor.features[feature.key]} />))}
                         </ul>
                     </div>
                     <p>

@@ -4,6 +4,7 @@ import ISO6391 from 'iso-639-1';
 import {Row, Col, Form, Collapse, Button} from 'react-bootstrap';
 import {LocalPropTypes} from '../proptypes';
 import * as styles from './SearchBox.module.css';
+import {Feature} from './Feature';
 
 export const SearchBox = ({ALL_FEATURES, ALL_LANGUAGES, setFilters, filters}) => {
     const [showAdvancedSearch, setShowAdvancedSearch] = React.useState(false);
@@ -71,15 +72,10 @@ export const SearchBox = ({ALL_FEATURES, ALL_LANGUAGES, setFilters, filters}) =>
                     <Col xs={12} md={6}>
                         <h3>Features</h3>
                         {ALL_FEATURES.map(feature => (
-                            <Form.Check
-                                key={feature.key}
-                                type="checkbox"
-                                id={`checkbox-feature-${feature.key}`}
-                                label={feature.label}
-                                onChange={onChangeFeature}
-                                data-feature={feature.key}
-                                value={filters.features[feature.key]}
-                            />
+                            <Form.Check key={feature.key} id={`checkbox-feature-${feature.key}`} onChange={onChangeFeature} data-feature={feature.key} value={filters.features[feature.key]}>
+                                <Form.Check.Input type={'checkbox'} />
+                                <Form.Check.Label><Feature feature={feature} /></Form.Check.Label>
+                            </Form.Check>
                         ))}
                     </Col>
                 </Row>

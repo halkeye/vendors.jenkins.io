@@ -97,11 +97,13 @@ const IndexPage = () => {
                         <div className="col">
                             <h4 className="display-4">Results</h4>
                             {filteredVendors.length === 0 && <strong>No results</strong>}
-                            {filteredVendors.length > 0 && (<ListGroup>
-                                {filteredVendors.map(({node: vendor}) => (
-                                    <VendorBox key={vendor.id} vendor={vendor} ALL_FEATURES={ALL_FEATURES} />
-                                ))}
-                            </ListGroup>)}
+                            {filteredVendors.length > 0 && (
+                                <ListGroup>
+                                    {filteredVendors.map(({node: vendor}) => (
+                                        <ListGroup.Item key={vendor.id}><VendorBox vendor={vendor} ALL_FEATURES={ALL_FEATURES} /></ListGroup.Item>
+                                    ))}
+                                </ListGroup>
+                            )}
                         </div>
                     </div>
                 </div>
