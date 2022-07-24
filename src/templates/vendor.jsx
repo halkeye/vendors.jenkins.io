@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {graphql, Link} from 'gatsby';
+
 import {LocalPropTypes} from '../proptypes';
 import {useAllFeatures} from '../hooks';
 import {Feature} from '../components/Feature';
-import Layout from '../layout';
+import {LocalTimeOffset} from '../components/LocalTimeOffset';
 import {Language} from '../components/Language';
 import {VendorLogo} from '../components/VendorLogo';
+
+import Layout from '../layout';
+
 import Tab from 'react-bootstrap/Tab';
 import Nav from 'react-bootstrap/Nav';
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -83,11 +87,11 @@ const VendorPage = ({data: {vendor}}) => {
                     </div>
                     <div className="row">
                       <div className="col-md-3"><label>Timezone</label></div>
-                      <div className="col-md-9">{loc.timezone}</div>
+                      <div className="col-md-9">{loc.timezone > 0 ? (`+${ loc.timezone.toString().padStart(4, '0')}`) : (`-${ Math.abs(loc.timezone).toString().padStart(4, '0')}`)}</div>
                     </div>
                     <div className="row">
                       <div className="col-md-3"><label>Local Time</label></div>
-                      <div className="col-md-9">{new Date(Date.parse((new Date()).toUTCString()) + (loc.timezone*60*1000)).toLocaleTimeString()}</div>
+                      <div className="col-md-9"><LocalTimeOffset offsetSeconds={loc.timezone*60*1000} /></div>
                     </div>
                   </div>))}
                 </Tab.Pane>
