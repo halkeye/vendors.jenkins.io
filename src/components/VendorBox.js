@@ -20,7 +20,7 @@ export const VendorBox = ({vendor}) => {
         <div className="row">
           <div className="col-md-3 d-none d-md-block">
             <div className="d-flex justify-content-center mx-auto h-100">
-              <VendorLogo logo={vendor.logo} alt={`${vendor.name} Logo`} className="text-center mx-auto" style={{height: '70px'}} />
+              <VendorLogo logo={vendor.logo} alt={`${vendor.name} Logo`} className="text-center mx-auto" style={{width: '100px'}} />
             </div>
           </div>
           <div className="col-md-9">
