@@ -96,7 +96,7 @@ async function createVendorPages({graphql, createPage, createRedirect}) {
 
   result.data.vendors.edges.forEach(edge => {
     createPage({
-      path: `${edge.vendor.fields.slug}/`,
+      path: `/vendor/${edge.vendor.fields.slug}/`,
       component: vendorTemplate,
       context: {
         id: edge.vendor.id,

@@ -24,7 +24,7 @@ export const VendorBox = ({vendor}) => {
             </div>
           </div>
           <div className="col-md-9">
-            <h2 className="card-title text-center"><Link to={vendor.fields.slug}>{vendor.name}</Link></h2>
+            <h2 className="card-title text-center"><Link to={`/vendor/${vendor.fields.slug}/`}>{vendor.name}</Link></h2>
           </div>
         </div>
         <div className="card-text">
