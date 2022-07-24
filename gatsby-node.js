@@ -1,126 +1,117 @@
 const {makeReactLayout, saveReactLayout} = require('@halkeye/jenkins-io-react/makeLayout');
+const fetch = require('node-fetch');
 const path = require('path');
 //const YAML = require('yaml');
 
 exports.onPreBootstrap = async () => {
-    await makeReactLayout('https://vendors.jenkins.io').then(saveReactLayout);
+  await makeReactLayout('https://vendors.jenkins.io').then(saveReactLayout);
 };
 
-exports.onCreateNode = ({node, getNode, actions}) => {
-    const {createNodeField} = actions;
-    const fileNode = getNode(node.parent);
-    if ((node.internal.type === 'VendorsYaml') && fileNode.internal.type === 'File') {
-        const parsedFilePath = path.parse(fileNode.relativePath);
-
-        createNodeField({
-            name: 'slug',
-            node,
-            value: parsedFilePath.name,
-        });
-    }
-};
 
 /*
-async function createUserStoryPages({graphql, createPage, createRedirect}) {
-    const userStory = path.resolve('src/pages/_user_story.jsx');
-    const result = await graphql(`{
-      stories: allUserStory {
+const _permissionsReport = fetch('https://reports.jenkins.io/github-jenkinsci-permissions-report.json')
+    .then(response => response.json())
+    .then(reportData => reportData.reduce((prev, [repo, username, _]) => {
+        prev[username] = (prev[username] || []).concat([ repo ]);
+        return prev;
+    }), {});
+    */
+const _permissionsReport = fetch('https://updates.jenkins.io/update-center.actual.json')
+  .then(response => response.json())
+  .then(({plugins}) => {
+    return Object.values(plugins).reduce((prev, plugin) => {
+      (plugin.developers || []).forEach(({developerId}) => {
+        prev[developerId] = (prev[developerId] || []).concat([ plugin.name ]);
+      });
+      return prev;
+    }, {});
+  });
+
+exports.onCreateNode = async ({node, getNode, actions}) => {
+  const {createNodeField} = actions;
+  const fileNode = getNode(node.parent);
+  if ((node.internal.type === 'VendorsYaml') && fileNode.internal.type === 'File') {
+    const parsedFilePath = path.parse(fileNode.relativePath);
+
+    createNodeField({
+      name: 'slug',
+      node,
+      value: parsedFilePath.name,
+    });
+  }
+  if (node.internal.type === 'VendorsYaml') {
+    const community_members = node.community_members || [];
+    const permissionsReport = await _permissionsReport;
+    const plugins = Array.from(new Set(community_members.map(member => permissionsReport[member]).flat().filter(Boolean)));
+
+    createNodeField({
+      name: 'community_members',
+      node,
+      value: community_members
+    });
+    createNodeField({
+      name: 'plugins',
+      node,
+      value: plugins
+    });
+    createNodeField({
+      name: 'pluginsCount',
+      node,
+      value: plugins.length
+    });
+  }
+};
+
+async function createVendorPages({graphql, createPage, createRedirect}) {
+  const vendorTemplate = path.resolve('src/templates/vendor.jsx');
+  const result = await graphql(`{
+      vendors: allVendorsYaml {
         edges {
-          node {
+          vendor: node {
             id
-            slug
+            fields {
+              slug
+            }
           }
           next {
-            title
-            slug
+            id
+            fields {
+              slug
+            }
           }
           previous {
-            title
-            slug
+            name
+            fields {
+              slug
+            }
           }
         }
       }
     }`);
 
-    if (result.errors) {
-        console.error(result.errors);
-        throw result.errors;
-    }
+  if (result.errors) {
+    console.error(result.errors);
+    throw result.errors;
+  }
 
-    result.data.stories.edges.forEach(edge => {
-        if (!edge.node.slug.startsWith('jenkins-is-the-way-')) {
-            // just in case handle any urls that previously had jenkins-is-the-way in the url
-            createRedirect({
-                fromPath: `/user-story/jenkins-is-the-way-${edge.node.slug}/`,
-                toPath: `/user-story/${edge.node.slug}/`,
-                isPermanent: true,
-            });
-        }
-        createPage({
-            path: `/user-story/${edge.node.slug}/`,
-            component: userStory,
-            context: {
-                id: edge.node.id,
-                next: edge.next,
-                previous: edge.previous,
-            }
-        });
+  result.data.vendors.edges.forEach(edge => {
+    createPage({
+      path: `${edge.vendor.fields.slug}/`,
+      component: vendorTemplate,
+      context: {
+        id: edge.vendor.id,
+        next: edge.next,
+        previous: edge.previous,
+      }
     });
+  });
 }
 
 exports.createPages = async ({graphql, actions: {createPage, createRedirect}}) => {
-    await createUserStoryPages({graphql, createPage, createRedirect});
+  await createVendorPages({graphql, createPage, createRedirect});
 };
 
-exports.onCreateNode = async ({node, actions, loadNodeContent, createNodeId, createContentDigest}) => {
-    const {createNode, createParentChildLink} = actions;
-
-    if (node.internal.type === 'File') {
-        if (node.base === 'index.yaml') {
-            const content = await loadNodeContent(node);
-            const obj = YAML.parse(content);
-            obj.slug = path.basename(node.dir);
-
-            const yamlNode = {
-                ...obj,
-                id: createNodeId(`${obj.slug} >>> UserStory`),
-                children: [],
-                parent: node.id,
-                internal: {
-                    type: 'UserStory',
-                },
-            };
-            const paragraphs = obj.body_content.paragraphs;
-
-            yamlNode.body_content.paragraphs = paragraphs.map((_, idx) => createNodeId(`${yamlNode.id} >>> ${idx} >>> MarkdownRemark`));
-            yamlNode.internal.contentDigest = createContentDigest(yamlNode);
-
-            createNode(yamlNode);
-            createParentChildLink({parent: node, child: yamlNode});
-
-            for (let i = 0; i < paragraphs.length; i++) {
-                const markdownNode = {
-                    id: yamlNode.body_content.paragraphs[i],
-                    frontmatter: {},
-                    excerpt: '',
-                    rawMarkdownBody: paragraphs[i],
-                    fileAbsolutePath: node.absolutePath,
-                    children: [],
-                    parent: yamlNode.id,
-                    internal: {
-                        content: paragraphs[i],
-                        type: 'MarkdownRemark',
-                    },
-                };
-                markdownNode.internal.contentDigest = createContentDigest(markdownNode);
-                createNode(markdownNode);
-                createParentChildLink({parent: yamlNode, child: markdownNode});
-                createParentChildLink({parent: node, child: markdownNode});
-            }
-        }
-    }
-};
-
+/*
 exports.createSchemaCustomization = ({actions: {createTypes}}) => {
     createTypes(`
         type UserStoryMetadata {

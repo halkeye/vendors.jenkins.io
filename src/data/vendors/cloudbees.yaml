@@ -1,23 +1,27 @@
 ---
 name: CloudBees
 # Landing page for support?
-url: https://support.cloudbees.com
-logo: ./cloudbees.svg
+urls:
+  - type: support
+    url: https://support.cloudbees.com
+  - type: company
+    url: https://www.cloudbees.com
+logo: ./cloudbees.jpg
 # for timezone listing
 # I don't know how to record this yet
 locations:
   - name: New York
-    timezone: -0400
+    timezone: -400
   - name: San Francisco
-    timezone: -0700
+    timezone: -700
   - name: London
-    timezone: +0100
+    timezone: +100
   - name: Paris
-    timezone: +0100
+    timezone: +100
   - name: Sydney
     timezone: +1000
   - name: New Delhi
-    timezone: +0530
+    timezone: +530
 languages:
   - de
   - en

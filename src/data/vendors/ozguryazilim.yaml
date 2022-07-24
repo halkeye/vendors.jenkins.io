@@ -1,7 +1,11 @@
 ---
 name: Özgür Yazılım
 # Landing page for support?
-url: https://www.ozguryazilim.com.tr/en/
+urls:
+  - type: support
+    url: https://www.ozguryazilim.com.tr/en/
+  - type: company
+    url: https://www.ozguryazilim.com.tr/en/
 # Later we'll embed logos into the site so we don't ever get 404s
 logo: ./ozguryazilim.png
 # for timezone listing
@@ -17,5 +21,4 @@ features:
   - support
   - training
 # should be ldap usernames so we can look up plugins as needed
-community_members:
-  - kmartens27
+community_members:  []
