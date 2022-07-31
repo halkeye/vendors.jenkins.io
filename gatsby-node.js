@@ -44,17 +44,17 @@ exports.onCreateNode = async ({node, getNode, actions}) => {
     createNodeField({
       name: 'community_members',
       node,
-      value: node?.community_members?.map(i => ({id: i, displayName: maintainers[i] || i}))
+      value: node?.community_members?.map(i => ({id: i, displayName: maintainers[i] || i})) || []
     });
     createNodeField({
       name: 'plugins',
       node,
-      value: node?.plugins?.map(i => ({id: i, displayName: plugins[i] || i}))
+      value: node?.plugins?.map(i => ({id: i, displayName: plugins[i] || i})) || []
     });
     createNodeField({
       name: 'pluginsCount',
       node,
-      value: node?.plugins?.length
+      value: node?.plugins?.length || 0
     });
   }
 };
