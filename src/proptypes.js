@@ -9,7 +9,7 @@ export const LocalPropTypes = {
     id: PropTypes.string.isRequired,
     logo: PropTypes.object.isRequired,
     name: PropTypes.string.isRequired,
-    features: PropTypes.object.isRequired,
+    features: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
     fields: PropTypes.shape({
       slug: PropTypes.string.isRequired
     }).isRequired,

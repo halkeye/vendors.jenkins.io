@@ -97,12 +97,12 @@ const VendorPage = ({data: {vendor}}) => {
                 </Tab.Pane>
                 <Tab.Pane eventKey="plugins">
                   <ListGroup>
-                    {vendor.fields.plugins.sort().map(p => <ListGroup.Item key={p}><a href={`https://plugins.jenkins.io/${p}`}>{p}</a></ListGroup.Item>)}
+                    {vendor.fields.plugins.sort().map(p => <ListGroup.Item key={p.id}><a href={`https://plugins.jenkins.io/${p.id}`}>{`${p.displayName} (${p.id})`}</a></ListGroup.Item>)}
                   </ListGroup>
                 </Tab.Pane>
                 <Tab.Pane eventKey="community_members">
                   <ListGroup>
-                    {vendor.fields.community_members.sort().map(m => <ListGroup.Item key={m}>{m}</ListGroup.Item>)}
+                    {vendor.fields.community_members.sort().map(m => <ListGroup.Item key={m.id}>{`${m.displayName} (${m.id})`}</ListGroup.Item>)}
                   </ListGroup>
                 </Tab.Pane>
               </Tab.Content>
@@ -126,6 +126,7 @@ export default VendorPage;
 export const query = graphql`
   query Query($id: String!) {
     vendor: vendorsYaml(id: {eq: $id}) {
+      id
       features {
         id
         key
@@ -133,8 +134,14 @@ export const query = graphql`
         description
       }
       fields {
-        community_members
-        plugins
+        community_members {
+          id
+          displayName
+        }
+        plugins {
+          id
+          displayName
+        }
         pluginsCount
         slug
       }

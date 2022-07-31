@@ -55,3 +55,25 @@ community_members:
   - twasyl
   - vlatombe
   - wfollonier
+plugins:
+  - "artifact-manager-s3"
+  - "aws-credentials"
+  - "aws-global-configuration"
+  - "aws-java-sdk"
+  - "azure-publishersettings-credentials"
+  - "bouncycastle-api"
+  - "credentials-binding"
+  - "credentials"
+  - "github-api"
+  - "kubernetes-client-api"
+  - "kubernetes-credentials"
+  - "kubernetes"
+  - "ldap"
+  - "mapdb-api"
+  - "metrics"
+  - "okhttp-api"
+  - "pam-auth"
+  - "plain-credentials"
+  - "secure-requester-whitelist"
+  - "ssh-credentials"
+  - "view-job-filters"

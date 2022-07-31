@@ -7,22 +7,20 @@ exports.onPreBootstrap = async () => {
   await makeReactLayout('https://vendors.jenkins.io').then(saveReactLayout);
 };
 
+const _maintainers = fetch('https://reports.jenkins.io/maintainers-info-report.json')
+  .then(response => response.json())
+  .then((maintainers) => {
+    return Object.values(maintainers).reduce((prev, maintainer) => {
+      prev[maintainer.name] = maintainer.displayName;
+      return prev;
+    }, {});
+  });
 
-/*
-const _permissionsReport = fetch('https://reports.jenkins.io/github-jenkinsci-permissions-report.json')
-    .then(response => response.json())
-    .then(reportData => reportData.reduce((prev, [repo, username, _]) => {
-        prev[username] = (prev[username] || []).concat([ repo ]);
-        return prev;
-    }), {});
-    */
-const _permissionsReport = fetch('https://updates.jenkins.io/update-center.actual.json')
+const _plugins = fetch('https://updates.jenkins.io/update-center.actual.json')
   .then(response => response.json())
   .then(({plugins}) => {
     return Object.values(plugins).reduce((prev, plugin) => {
-      (plugin.developers || []).forEach(({developerId}) => {
-        prev[developerId] = (prev[developerId] || []).concat([ plugin.name ]);
-      });
+      prev[plugin.name] = plugin.title;
       return prev;
     }, {});
   });
@@ -40,24 +38,23 @@ exports.onCreateNode = async ({node, getNode, actions}) => {
     });
   }
   if (node.internal.type === 'VendorsYaml') {
-    const community_members = node.community_members || [];
-    const permissionsReport = await _permissionsReport;
-    const plugins = Array.from(new Set(community_members.map(member => permissionsReport[member]).flat().filter(Boolean)));
+    const maintainers = await _maintainers;
+    const plugins = await _plugins;
 
     createNodeField({
       name: 'community_members',
       node,
-      value: community_members
+      value: node?.community_members?.map(i => ({id: i, displayName: maintainers[i] || i}))
     });
     createNodeField({
       name: 'plugins',
       node,
-      value: plugins
+      value: node?.plugins?.map(i => ({id: i, displayName: plugins[i] || i}))
     });
     createNodeField({
       name: 'pluginsCount',
       node,
-      value: plugins.length
+      value: node?.plugins?.length
     });
   }
 };
