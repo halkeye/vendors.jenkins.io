@@ -13,11 +13,9 @@ import Layout from '../layout';
 
 import Tab from 'react-bootstrap/Tab';
 import Nav from 'react-bootstrap/Nav';
-import ListGroup from 'react-bootstrap/ListGroup';
-import Badge from 'react-bootstrap/Badge';
 
-const VendorPage = ({data: {vendor}}) => {
-  const [tab, setTab] = React.useState('about');
+const VendorPage = ({data: {vendor}, location}) => {
+  const tab = location?.hash?.replace('#', '') || 'about';
   const ALL_FEATURES = useAllFeatures();
   const vendorFeatures = vendor.features.map(f => f.key);
   const vendorUrls = vendor.urls.reduce((prev, cur) => { prev[cur.type] = cur.url; return prev; }, {});
@@ -38,22 +36,13 @@ const VendorPage = ({data: {vendor}}) => {
                 </ul>
               </div>
             </div>
-            <div className="col-md-6">
+            <div className="col-md-8">
               <h2>{vendor.name}</h2>
               <Nav variant="tabs" activeKey={tab} role="tablist" fill>
-                <Nav.Item><Nav.Link onClick={(e) => { e.preventDefault(); setTab('about'); return false; }} eventKey="about" href="#">About</Nav.Link></Nav.Item>
+                <Nav.Item><Nav.Link eventKey="about" href="#about">About</Nav.Link></Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey="plugins" href="#" onClick={(e) => { e.preventDefault(); setTab('plugins'); return false; }}>
-                    Plugins
-                    {' '}
-                    <Badge bg="info">{vendor.fields.plugins.length}</Badge>
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="community_members" href="#" onClick={(e) => { e.preventDefault(); setTab('community_members'); return false; }}>
-                    Community Members
-                    {' '}
-                    <Badge bg="info">{vendor.fields.community_members.length}</Badge>
+                  <Nav.Link eventKey="community_involvement" href="#community_involvement">
+                    Community Involvemnet
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
@@ -95,15 +84,21 @@ const VendorPage = ({data: {vendor}}) => {
                     </div>
                   </div>))}
                 </Tab.Pane>
-                <Tab.Pane eventKey="plugins">
-                  <ListGroup>
-                    {vendor.fields.plugins.sort().map(p => <ListGroup.Item key={p.id}><a href={`https://plugins.jenkins.io/${p.id}`}>{`${p.displayName} (${p.id})`}</a></ListGroup.Item>)}
-                  </ListGroup>
-                </Tab.Pane>
-                <Tab.Pane eventKey="community_members">
-                  <ListGroup>
-                    {vendor.fields.community_members.sort().map(m => <ListGroup.Item key={m.id}>{`${m.displayName} (${m.id})`}</ListGroup.Item>)}
-                  </ListGroup>
+                <Tab.Pane eventKey="community_involvement">
+                  <div className="d-flex flex-row">
+                    <div className="d-flex flex-column">
+                      <div className="p-2"><h4 className="text-nowrap">Plugins</h4></div>
+                      {vendor.fields.plugins.sort((a, b) => a.displayName.localeCompare(b.displayName)).map(p => (<div className="p-2" key={p.id}>
+                        <a href={`https://plugins.jenkins.io/${p.id}`}>{`${p.displayName} (${p.id})`}</a>
+                      </div>))}
+                    </div>
+                    <div className="d-flex flex-column">
+                      <div className="p-2"><h4 className="text-nowrap">Community Members</h4></div>
+                      {vendor.fields.community_members.sort((a, b) => a.displayName.localeCompare(b.displayName)).map(m => (<div className="p-2" key={m.id}>
+                        {`${m.displayName} (${m.id})`}
+                      </div>))}
+                    </div>
+                  </div>
                 </Tab.Pane>
               </Tab.Content>
             </div>
